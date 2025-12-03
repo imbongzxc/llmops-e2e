@@ -22,13 +22,13 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build & Push
+      - name: Build & Push Docker Image
         uses: docker/build-push-action@v4
         with:
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/llmops-e2e:latest
 
-      - name: Install Trivy
+      - name: Scan Image with Trivy
         uses: aquasecurity/trivy-action@master
         with:
           scan-type: image
@@ -44,11 +44,12 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      - name: Set up kubectl
+      - name: Set up kubeconfig
         run: |
           mkdir -p $HOME/.kube
           echo "${{ secrets.KUBE_CONFIG }}" > $HOME/.kube/config
 
-      - name: Apply Kubernetes Manifests
+      - name: Deploy to Kubernetes
         run: |
-          kubectl apply -f k8s/
+          kubectl apply -f deployment.yaml
+          kubectl apply -f service.yaml
