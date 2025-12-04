@@ -14,6 +14,6 @@ spec:
     spec:
       containers:
       - name: gptcontainer
-        image: darryl1975/fastapi-app:v1amd64
+        image: ghcr.io/imbongzxc/llmops-app:latest
         ports:
         - containerPort: 8000
